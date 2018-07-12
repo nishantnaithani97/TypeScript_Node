@@ -10,7 +10,6 @@ class UserController extends UserMethods {
   registerUser = async (req: Request, res: Response) => {
     try {
       const reqData = BaseHelper.trimData(req.body);
-      console.log("-----------usercontroller.ts file--------------", reqData);
       let { name, email, password } = reqData;
       if (!(name && email && password)) {
         return res.send(ResponseHelpers.error({ message: "Invalid Data Provided" }));
@@ -24,16 +23,15 @@ class UserController extends UserMethods {
         email,
         password,
       };
-      // console.log('-------------line 26---', data);
-      const response = await Users.create(data);
+      const response = await this.insert(data);
 
       console.log("Respos", response);
       if (response && response._id) {
         console.log(response._id);
-        return res.send(ResponseHelpers.success({ message: "User Regsitered Successfully." }));
+        return res.send(ResponseHelpers.success({ message: "User Successfully Registered" }));
       }
+      return res.send(ResponseHelpers.error({message : "Error Occured while Registering User"}));
     } catch (err) {
-      // console.log('Err, err', err);
       return res.send(ResponseHelpers.error(err));
     }
   };
@@ -42,7 +40,6 @@ class UserController extends UserMethods {
   loginUser = async (req: Request, res: Response) => {
     try {
         const reqData = BaseHelper.trimData(req.headers);
-        // console.log('--------loginUser------', reqData);
         let { email, password } = reqData;
 
         if (!(email && password)) {
@@ -56,12 +53,14 @@ class UserController extends UserMethods {
         };
 
         const response: any = await this.fetch(data);
+        console.log("-----------------56----------", response);
         if (response && response.password) {
           const valid = password === response.password;
           if (valid) {
             return res.send(ResponseHelpers.success(data));
-          }
+          } else {
           return res.send(ResponseHelpers.error({ message : "Password is incorrect." }));
+          }
        }
        return res.send(ResponseHelpers.error({ messgae : "User Not Found"}));
       } catch (err) {

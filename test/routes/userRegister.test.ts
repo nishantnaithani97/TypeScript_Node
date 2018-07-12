@@ -10,100 +10,102 @@ import app from "../../src/app";
 import Register from "../fixtures/register";
 
 // TEST CASE FOR SUCCESSFULLY REGISTERING USER WITH PROVIDING ALL THE VALID DETAILS.
-describe("Test cases for registering user. (SUCCESS CASE)", () => {
+describe("Test cases for registering user.", () => {
   // Test Case for registering the user with every detail.
   describe("/api/user/register", () => {
     describe("Success Case", () => {
-      beforeAll(() => {
-        Users.remove({});
+      beforeEach(async (done) => {
+        await Users.remove({});
+        done();
       });
 
-      it("Required fields are provided for user registration", () => {
-        const user = Register.fullData;
-        request(app)
-          .post("/api/user/register")
-          .send(user)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
-            expect(res.body.status).to.equal("success");
-          });
+    it("Required fields are provided for user registration", (done) => {
+      const user = Register.fullData;
+      return request(app)
+        .post("/api/user/register")
+        .send(user)
+        .then((res) => {
+          console.log("------30------", res.body);
+          expect(res.body.status).to.equal("success");
+          done();
+        });
       });
     });
-  });
-});
-
-// TEST CASES BY WHICH USER CANNOT BE REGISTERED.
-describe("Test cases for registering user. (ERROR CASES)", () => {
 
   // Test case for registering the user without providing name.
-  describe("/api/user/register", () => {
+  // describe("/api/user/register", () => {
     describe("Error Case", () => {
-      beforeAll(() => {
-        Users.remove({});
+      beforeAll(async (done) => {
+        await Users.remove({});
         const user = new Users(Register.testData);
         // console.log(user);
-        user.save();
+        await user.save();
+        done();
       });
-
-      it("Name is not given", () => {
+      it("Name is not given", (done) => {
         const user = Register.withoutName;
-        request(app)
+        return request(app)
           .post("/api/user/register")
           .send(user)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
+          .then((res) => {
+            console.log("------30------", res.body);
             expect(res.body.status).to.equal("error");
+            done();
           });
       });
 
       // Test case for registering the user without providing address in email.
-      it("Address in email is missing", () => {
+      it("Address in email is missing", (done) => {
         const user = Register.withoutEmail;
-        request(app)
+        return request(app)
           .post("/api/user/register")
           .send(user)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
+          .then((res) => {
+            console.log("------30------", res.body);
             expect(res.body.status).to.equal("error");
+            done();
           });
       });
 
       // Test case for registering the user without providing password.
-      it("Password is missing", () => {
+      it("Password is missing", (done) => {
         const user = Register.withoutPassword;
-        request(app)
+        return request(app)
           .post("/api/user/register")
           .send(user)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
+          .then((res) => {
+            console.log("------30------", res.body);
             expect(res.body.status).to.equal("error");
+            done();
           });
       });
 
-      // Test case for registering the user without providing any details.
-      it("No data is present", () => {
+      // // Test case for registering the user without providing any details.
+      it("No data is present", (done) => {
         const user = Register.withoutAnyData;
-        request(app)
+        return request(app)
           .post("/api/user/register")
           .send(user)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
+          .then((res) => {
+            console.log("------30------", res.body);
             expect(res.body.status).to.equal("error");
+            done();
           });
       });
 
       // Test case for registering the user with same email.
-      it("User with same email address", () => {
+      it("User with same email address", (done) => {
         const user = Register.sameEmail;
-        request(app)
+        return request(app)
           .post("/api/user/register")
           .send(user)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body).to.be.a("object");
-            expect(res.body.status).to.be.equal("error");
+          .then((res) => {
+            console.log("------30------", res.body);
+            expect(res.body.status).to.equal("error");
+            done();
           });
       });
     });
   });
 });
+// jest.setTimeout(100000);

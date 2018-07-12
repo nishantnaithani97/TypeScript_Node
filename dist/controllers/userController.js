@@ -14,7 +14,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userMethods_1 = __importDefault(require("./userMethods"));
 const base_1 = __importDefault(require("../lib/base"));
 const responseHelper_1 = __importDefault(require("../lib/responseHelper"));
-const Users_1 = __importDefault(require("../models/Users"));
 class UserController extends userMethods_1.default {
     constructor() {
         super(...arguments);
@@ -22,7 +21,6 @@ class UserController extends userMethods_1.default {
         this.registerUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqData = base_1.default.trimData(req.body);
-                console.log("-----------usercontroller.ts file--------------", reqData);
                 let { name, email, password } = reqData;
                 if (!(name && email && password)) {
                     return res.send(responseHelper_1.default.error({ message: "Invalid Data Provided" }));
@@ -35,16 +33,15 @@ class UserController extends userMethods_1.default {
                     email,
                     password,
                 };
-                // console.log('-------------line 26---', data);
-                const response = yield Users_1.default.create(data);
+                const response = yield this.insert(data);
                 console.log("Respos", response);
                 if (response && response._id) {
                     console.log(response._id);
-                    return res.send(responseHelper_1.default.success({ message: "User Regsitered Successfully." }));
+                    return res.send(responseHelper_1.default.success({ message: "User Successfully Registered" }));
                 }
+                return res.send(responseHelper_1.default.error({ message: "Error Occured while Registering User" }));
             }
             catch (err) {
-                // console.log('Err, err', err);
                 return res.send(responseHelper_1.default.error(err));
             }
         });
@@ -52,7 +49,6 @@ class UserController extends userMethods_1.default {
         this.loginUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const reqData = base_1.default.trimData(req.headers);
-                // console.log('--------loginUser------', reqData);
                 let { email, password } = reqData;
                 if (!(email && password)) {
                     return res.send(responseHelper_1.default.error({ message: "Invalid Data Provided" }));
@@ -63,6 +59,7 @@ class UserController extends userMethods_1.default {
                     email,
                 };
                 const response = yield this.fetch(data);
+                console.log('-----------------56----------', response);
                 if (response && response.password) {
                     const valid = password === response.password;
                     if (valid) {

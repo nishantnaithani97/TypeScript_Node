@@ -4,7 +4,7 @@
   "description": "Node Application using TypeScript.",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "export NODE_ENV=test && jest --forceExit --coverage --verbose --detectOpenHandles",
+    "test": "export NODE_ENV=test && jest --forceExit --coverage --verbose --detectOpenHandles --runInBand",
     "development": "export NODE_ENV=development && nodemon"
   },
   "author": "Nishant Naithani",

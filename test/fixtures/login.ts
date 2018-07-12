@@ -10,7 +10,7 @@ export default {
   },
 
   wrongPassword: {
-    "email": "testcase@test123.case",
+    "email": "testcase@test.case",
     "password": "testcase123@123"
   },
 
@@ -21,7 +21,7 @@ export default {
   },
 
   withoutPassword: {
-    "email": "testcase@test123.case",
+    "email": "testcase@test.case",
     // tslint:disable-next-line:no-null-keyword
     "password": null
   },
